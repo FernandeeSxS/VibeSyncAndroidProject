@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "449609820079",
+    "project_id": "loginapp-7eab7",
+    "storage_bucket": "loginapp-7eab7.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:449609820079:android:ae3deec41e1d9b3e2c715a",
+        "android_client_info": {
+          "package_name": "ipca.example.loginapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB2gTH_3WU_y1JxvmmVuoU0UWL3J4UR9OA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
