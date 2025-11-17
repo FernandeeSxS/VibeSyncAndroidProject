@@ -39,7 +39,6 @@ fun HomeView(navController: NavController, viewModel: HomeViewModel = viewModel(
     var showDialog by remember { mutableStateOf(false) }
     var playlistName by remember { mutableStateOf("") }
 
-    // Buscar playlists ao abrir
     LaunchedEffect(Unit) {
         viewModel.fetchPlaylists()
     }
@@ -48,7 +47,6 @@ fun HomeView(navController: NavController, viewModel: HomeViewModel = viewModel(
         topBar = {
             TopAppBar(
                 title = {
-                    // Box para centralizar tanto o título da app quanto a frase
                     Box(
                         modifier = Modifier.fillMaxWidth(),
                         contentAlignment = Alignment.Center
@@ -85,7 +83,6 @@ fun HomeView(navController: NavController, viewModel: HomeViewModel = viewModel(
                     .padding(padding)
                     .padding(horizontal = 16.dp, vertical = 12.dp)
             ) {
-                // Mensagem de erro, se existir
                 uiState.error?.let { errorMsg ->
                     Text(
                         text = errorMsg,
@@ -96,7 +93,6 @@ fun HomeView(navController: NavController, viewModel: HomeViewModel = viewModel(
                 }
 
                 if (uiState.playlists.isEmpty()) {
-                    // Empty State divertido
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -120,7 +116,6 @@ fun HomeView(navController: NavController, viewModel: HomeViewModel = viewModel(
                         }
                     }
                 } else {
-                    // Lista de playlists em Cards
                     LazyColumn(
                         modifier = Modifier.weight(1f)
                     ) {
@@ -160,7 +155,6 @@ fun HomeView(navController: NavController, viewModel: HomeViewModel = viewModel(
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                // Botão estiloso para criar playlist
                 Button(
                     onClick = { showDialog = true },
                     modifier = Modifier.fillMaxWidth(),
@@ -176,7 +170,6 @@ fun HomeView(navController: NavController, viewModel: HomeViewModel = viewModel(
                     )
                 }
 
-                // Dialog para criar nova playlist
                 if (showDialog) {
                     AlertDialog(
                         onDismissRequest = { showDialog = false },

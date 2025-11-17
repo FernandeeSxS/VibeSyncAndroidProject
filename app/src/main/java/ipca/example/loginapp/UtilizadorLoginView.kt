@@ -92,7 +92,6 @@ fun UtilizadorLoginView(
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            // 🔹 Campo de Password com botão de visibilidade
             TextField(
                 value = uiState.password ?: "",
                 onValueChange = { viewModel.updatePassword(it) },

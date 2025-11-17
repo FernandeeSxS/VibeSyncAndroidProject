@@ -23,22 +23,18 @@ class SongDetailViewModel : ViewModel() {
 
     private val db = Firebase.firestore
 
-    // Atualiza o título da música
     fun updateTitle(title: String) {
         uiState.value = uiState.value.copy(title = title)
     }
 
-    // Atualiza o artista
     fun updateArtist(artist: String) {
         uiState.value = uiState.value.copy(artist = artist)
     }
 
-    // Atualiza o género
     fun updateGenre(genre: String) {
         uiState.value = uiState.value.copy(genre = genre)
     }
 
-    // Busca a música existente (para edição)
     fun fetchSong(songId: String, playlistId: String) {
         uiState.value = uiState.value.copy(isLoading = true)
         val docRef = db.collection("playlists")
@@ -67,7 +63,6 @@ class SongDetailViewModel : ViewModel() {
             }
     }
 
-    // Cria ou atualiza a música
     fun saveSong(playlistId: String, songId: String? = null) {
         uiState.value = uiState.value.copy(isLoading = true)
 
@@ -82,7 +77,6 @@ class SongDetailViewModel : ViewModel() {
             .collection("songs")
 
         if (songId == null) {
-            // Cria nova música
             collectionRef.add(song)
                 .addOnSuccessListener { docRef ->
                     Log.d("SongDetailViewModel", "Song added with ID: ${docRef.id}")
@@ -93,7 +87,6 @@ class SongDetailViewModel : ViewModel() {
                     uiState.value = uiState.value.copy(isLoading = false, error = e.localizedMessage)
                 }
         } else {
-            // Atualiza música existente
             collectionRef.document(songId)
                 .set(song)
                 .addOnSuccessListener {
@@ -107,7 +100,6 @@ class SongDetailViewModel : ViewModel() {
         }
     }
 
-    // Elimina uma música
     fun deleteSong(playlistId: String, songId: String, onSuccess: () -> Unit, onFailure: (String) -> Unit) {
         db.collection("playlists")
             .document(playlistId)

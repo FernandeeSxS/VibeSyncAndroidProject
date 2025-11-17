@@ -60,7 +60,6 @@ fun SongDetailView(
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            // Função reutilizável para cada linha de informação
             @Composable
             fun InfoRow(label: String, value: String?, onEdit: () -> Unit) {
                 Row(
@@ -114,7 +113,6 @@ fun SongDetailView(
 
             Spacer(modifier = Modifier.weight(1f))
 
-            // Botão de eliminar com cor vibrante
             Button(
                 onClick = { showDeleteDialog = true },
                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFD32F2F)),
@@ -126,7 +124,6 @@ fun SongDetailView(
             }
         }
 
-        // Dialog de edição
         if (showEditDialog) {
             AlertDialog(
                 onDismissRequest = { showEditDialog = false },
@@ -160,7 +157,6 @@ fun SongDetailView(
             )
         }
 
-        // Dialog de eliminação
         if (showDeleteDialog) {
             AlertDialog(
                 onDismissRequest = { showDeleteDialog = false },
@@ -174,7 +170,7 @@ fun SongDetailView(
                                 playlistId,
                                 songId,
                                 onSuccess = { navController.popBackStack() },
-                                onFailure = { /* mostrar erro se quiseres */ }
+                                onFailure = { }
                             )
                             showDeleteDialog = false
                         }

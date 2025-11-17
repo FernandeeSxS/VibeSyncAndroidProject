@@ -40,7 +40,6 @@ fun SongsView(
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        // Título estilizado
         Text(
             text = "🎶 Músicas da Playlist",
             fontSize = 30.sp,
@@ -54,7 +53,7 @@ fun SongsView(
         Box(
             modifier = Modifier
                 .weight(1f)
-                .fillMaxWidth() // garante que o Box ocupa todo o espaço horizontal
+                .fillMaxWidth()
         ) {
             when {
                 uiState.isLoading -> {
@@ -131,7 +130,6 @@ fun SongsView(
             }
         }
 
-        // Botão "Adicionar Música" fixo
         Button(
             onClick = { navController.navigate("add_song/$playlistId") },
             modifier = Modifier

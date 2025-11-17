@@ -55,10 +55,10 @@ class MainActivity : ComponentActivity() {
 
                         // Rota para a Lista de Músicas (SongsView)
                         composable(
-                            // 1. O nome da chave na rota deve ser EXATAMENTE 'playlistId'
+
                             route = "songs/{playlistId}",
 
-                            // 2. O navArgument deve definir o nome EXATAMENTE como 'playlistId'
+
                             arguments = listOf(
                                 navArgument("playlistId") {
                                     type = NavType.StringType
@@ -66,7 +66,7 @@ class MainActivity : ComponentActivity() {
                             )
                         ) { backStackEntry ->
 
-                            // 3. O backStackEntry deve procurar o nome EXATAMENTE como 'playlistId'
+
                             val playlistId = backStackEntry.arguments?.getString("playlistId")
 
                             playlistId?.let {

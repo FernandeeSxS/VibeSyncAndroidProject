@@ -47,9 +47,8 @@ class UserProfileViewModel : ViewModel() {
                 user.updateEmail(newEmail).addOnCompleteListener { updateTask ->
                     uiState = uiState.copy(isLoading = false)
                     if (updateTask.isSuccessful) {
-                        // Logout imediatamente após alterar o email
                         auth.signOut()
-                        onComplete(true, null) // indica que deve voltar ao login
+                        onComplete(true, null)
                     } else {
                         onComplete(false, updateTask.exception?.localizedMessage)
                     }

@@ -96,7 +96,7 @@ fun RegisterView(
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            // Campo Password com olhinho
+            // Campo Password
             TextField(
                 value = viewModel.password,
                 onValueChange = { viewModel.password = it },
@@ -115,7 +115,7 @@ fun RegisterView(
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            // Campo Confirmar Password com olhinho
+            // Campo Confirmar Password
             TextField(
                 value = viewModel.confirmPassword,
                 onValueChange = { viewModel.confirmPassword = it },
@@ -134,7 +134,6 @@ fun RegisterView(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Mensagem de erro
             if (viewModel.errorMessage.isNotEmpty()) {
                 Text(
                     text = viewModel.errorMessage,

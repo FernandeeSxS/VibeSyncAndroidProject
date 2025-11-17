@@ -15,7 +15,6 @@ class RegisterViewModel : ViewModel() {
     fun registerUser(onSuccess: () -> Unit) {
         errorMessage = ""
 
-        // Validações básicas
         if (email.isBlank() || password.isBlank() || confirmPassword.isBlank()) {
             errorMessage = "Preencha todos os campos"
             return

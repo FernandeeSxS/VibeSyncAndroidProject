@@ -22,7 +22,6 @@ fun AddSongView(
 
     val uiState by viewModel.uiState
 
-    // Caso o playlistId seja diferente do que o ViewModel tinha, atualizamos
     LaunchedEffect(playlistId) {
         viewModel.playlistId = playlistId
     }
@@ -38,7 +37,6 @@ fun AddSongView(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            // Título da tela
             Text(
                 text = "Adicionar Nova Música",
                 style = MaterialTheme.typography.headlineMedium,
@@ -46,7 +44,6 @@ fun AddSongView(
                 textAlign = androidx.compose.ui.text.style.TextAlign.Center
             )
 
-            // Campos de input
             TextField(
                 value = title,
                 onValueChange = { title = it },
@@ -74,7 +71,6 @@ fun AddSongView(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Botão adicionar
             Button(
                 onClick = {
                     viewModel.addSong(
@@ -82,20 +78,18 @@ fun AddSongView(
                         artist = artist.text,
                         genre = genre.text
                     )
-                    navController.popBackStack() // volta ao SongsView
+                    navController.popBackStack()
                 },
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text("Adicionar Música")
             }
 
-            // Loading
             if (uiState.isLoading) {
                 Spacer(modifier = Modifier.height(16.dp))
                 CircularProgressIndicator()
             }
 
-            // Mensagem de erro
             uiState.error?.let { error ->
                 Spacer(modifier = Modifier.height(16.dp))
                 Text(text = "Erro: $error", color = MaterialTheme.colorScheme.error)

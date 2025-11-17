@@ -36,7 +36,6 @@ fun UserProfileView(navController: NavController, viewModel: UserProfileViewMode
             .padding(24.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        // Avatar ou ícone musical
         Icon(
             imageVector = Icons.Default.MusicNote,
             contentDescription = "Avatar musical",
@@ -46,7 +45,6 @@ fun UserProfileView(navController: NavController, viewModel: UserProfileViewMode
 
         Spacer(modifier = Modifier.height(12.dp))
 
-        // Título
         Text(
             text = "Perfil do VibeSync",
             style = MaterialTheme.typography.headlineMedium,
@@ -55,7 +53,6 @@ fun UserProfileView(navController: NavController, viewModel: UserProfileViewMode
 
         Spacer(modifier = Modifier.height(12.dp))
 
-        // Frase divertida
         Text(
             text = "Mantém a tua vibe sempre sincronizada! 🎵",
             style = MaterialTheme.typography.bodyMedium,
@@ -65,7 +62,6 @@ fun UserProfileView(navController: NavController, viewModel: UserProfileViewMode
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        // Email
         Card(
             modifier = Modifier
                 .fillMaxWidth()
@@ -92,7 +88,6 @@ fun UserProfileView(navController: NavController, viewModel: UserProfileViewMode
             }
         }
 
-        // Password
         Card(
             modifier = Modifier
                 .fillMaxWidth()
@@ -118,7 +113,6 @@ fun UserProfileView(navController: NavController, viewModel: UserProfileViewMode
 
         Spacer(modifier = Modifier.height(32.dp))
 
-        // Botão de logout divertido
         Button(
             onClick = { navController.navigate("login") },
             colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondary)
@@ -128,7 +122,6 @@ fun UserProfileView(navController: NavController, viewModel: UserProfileViewMode
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Mensagem de erro
         uiState.error?.let {
             Text(text = it, color = MaterialTheme.colorScheme.error)
         }
