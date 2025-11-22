@@ -1,10 +1,11 @@
-package ipca.example.loginapp
+package ipca.example.loginapp.ui.songs
 
 import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.firestore
+import ipca.example.loginapp.models.Song
 
 data class SongsViewState(
     var songs: List<Song> = emptyList(),

@@ -1,4 +1,4 @@
-package ipca.example.loginapp
+package ipca.example.loginapp.ui.songs
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -20,7 +20,6 @@ import androidx.navigation.compose.rememberNavController
 import ipca.example.loginapp.ui.theme.LoginAppTheme
 import androidx.compose.foundation.background
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.icons.filled.MusicNote
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.text.font.FontWeight
 

@@ -1,4 +1,4 @@
-package ipca.example.loginapp
+package ipca.example.loginapp.ui.login
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons

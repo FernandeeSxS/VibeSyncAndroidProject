@@ -1,4 +1,4 @@
-package ipca.example.loginapp
+package ipca.example.loginapp.ui.home
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -30,11 +30,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import androidx.compose.runtime.remember
 import androidx.compose.ui.text.style.TextAlign
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeView(navController: NavController, viewModel: HomeViewModel = viewModel()) {
+fun HomeView(navController: NavController, viewModel: HomeViewModel = hiltViewModel<HomeViewModel>()) {
     val uiState by viewModel.uiState
     var showDialog by remember { mutableStateOf(false) }
     var playlistName by remember { mutableStateOf("") }
@@ -110,7 +111,7 @@ fun HomeView(navController: NavController, viewModel: HomeViewModel = viewModel(
                             Text(
                                 text = "Ainda não tens playlists… Cria a primeira e começa a vibração!",
                                 color = Color.Gray,
-                                textAlign = androidx.compose.ui.text.style.TextAlign.Center,
+                                textAlign = TextAlign.Center,
                                 fontSize = 16.sp
                             )
                         }

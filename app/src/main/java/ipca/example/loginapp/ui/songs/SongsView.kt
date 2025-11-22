@@ -1,4 +1,4 @@
-package ipca.example.loginapp
+package ipca.example.loginapp.ui.songs
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*

@@ -1,4 +1,4 @@
-package ipca.example.loginapp
+package ipca.example.loginapp.ui.login
 
 import android.util.Log
 import androidx.compose.runtime.mutableStateOf

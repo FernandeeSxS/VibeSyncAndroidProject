@@ -7,18 +7,25 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.google.firebase.auth.FirebaseAuth
 import ipca.example.loginapp.ui.theme.LoginAppTheme
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
+import ipca.example.loginapp.ui.home.HomeView
+import ipca.example.loginapp.ui.login.UtilizadorLoginView
+import ipca.example.loginapp.ui.profile.UserProfileView
+import ipca.example.loginapp.ui.register.RegisterView
+import ipca.example.loginapp.ui.songs.AddSongView
+import ipca.example.loginapp.ui.songs.SongDetailView
+import ipca.example.loginapp.ui.songs.SongsView
+import dagger.hilt.android.AndroidEntryPoint
 
 const val TAG = "LoginApp"
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

@@ -1,4 +1,4 @@
-package ipca.example.loginapp
+package ipca.example.loginapp.models
 
 data class Playlist(
     var docId: String? = null,

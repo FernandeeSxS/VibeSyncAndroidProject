@@ -1,4 +1,4 @@
-package ipca.example.loginapp
+package ipca.example.loginapp.ui.profile
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -14,7 +14,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.material.icons.filled.MusicNote
 
 import androidx.compose.ui.text.style.TextAlign
-
 
 
 @OptIn(ExperimentalMaterial3Api::class)

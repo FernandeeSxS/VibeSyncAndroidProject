@@ -1,4 +1,4 @@
-package ipca.example.loginapp
+package ipca.example.loginapp.ui.profile
 
 import androidx.compose.runtime.*
 import androidx.lifecycle.ViewModel
