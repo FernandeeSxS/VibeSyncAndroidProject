@@ -10,25 +10,26 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import ipca.example.loginapp.ui.songs.SongsViewModel
+import ipca.example.loginapp.ui.songs.SongsViewState
 import ipca.example.loginapp.ui.theme.LoginAppTheme
-import androidx.compose.ui.text.font.FontStyle
-import androidx.compose.ui.text.font.FontWeight
-
 
 @Composable
 fun SongsView(
     navController: NavController,
     playlistId: String,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    viewModel: SongsViewModel = hiltViewModel()
 ) {
-    val viewModel: SongsViewModel = viewModel()
     val uiState by viewModel.uiState
 
     LaunchedEffect(playlistId) {
@@ -68,10 +69,8 @@ fun SongsView(
                     )
                 }
                 uiState.songs.isEmpty() -> {
-                    // Centraliza vertical e horizontal
                     Column(
-                        modifier = Modifier
-                            .fillMaxSize(),
+                        modifier = Modifier.fillMaxSize(),
                         verticalArrangement = Arrangement.Center,
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
@@ -140,8 +139,6 @@ fun SongsView(
         }
     }
 }
-
-
 
 @Preview(showBackground = true)
 @Composable

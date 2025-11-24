@@ -1,35 +1,31 @@
 package ipca.example.loginapp.ui.songs
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material3.Icon
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
-import ipca.example.loginapp.ui.theme.LoginAppTheme
-import androidx.compose.foundation.background
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.text.font.FontWeight
-
 
 @Composable
 fun SongDetailView(
     navController: NavController,
     playlistId: String,
     songId: String,
-    viewModel: SongDetailViewModel = viewModel()
+    viewModel: SongDetailViewModel = hiltViewModel<SongDetailViewModel>()
 ) {
     val uiState by viewModel.uiState
 
@@ -38,8 +34,11 @@ fun SongDetailView(
     var newValue by remember { mutableStateOf("") }
     var showDeleteDialog by remember { mutableStateOf(false) }
 
-    LaunchedEffect(songId) {
-        viewModel.fetchSong(songId, playlistId)
+    // FETCH SONG
+    LaunchedEffect(songId, playlistId) {
+        if (songId.isNotEmpty() && playlistId.isNotEmpty()) {
+            viewModel.fetchSong(songId, playlistId)
+        }
     }
 
     Box(modifier = Modifier.fillMaxSize().background(Color(0xFFF8F8F8))) {
@@ -123,6 +122,7 @@ fun SongDetailView(
             }
         }
 
+        // EDIT POPUP
         if (showEditDialog) {
             AlertDialog(
                 onDismissRequest = { showEditDialog = false },
@@ -131,7 +131,7 @@ fun SongDetailView(
                     OutlinedTextField(
                         value = newValue,
                         onValueChange = { newValue = it },
-                        label = { Text(fieldToEdit.capitalize()) },
+                        label = { Text(fieldToEdit.replaceFirstChar { it.uppercase() }) },
                         singleLine = true
                     )
                 },
@@ -142,45 +142,38 @@ fun SongDetailView(
                             "artist" -> viewModel.updateArtist(newValue)
                             "genre" -> viewModel.updateGenre(newValue)
                         }
-                        viewModel.saveSong(playlistId, songId)
+                        viewModel.saveSong(songId, playlistId)
                         showEditDialog = false
-                    }) {
-                        Text("Guardar")
-                    }
+                    }) { Text("Guardar") }
                 },
                 dismissButton = {
-                    TextButton(onClick = { showEditDialog = false }) {
-                        Text("Cancelar")
-                    }
+                    TextButton(onClick = { showEditDialog = false }) { Text("Cancelar") }
                 }
             )
         }
 
+        // DELETE POPUP
         if (showDeleteDialog) {
             AlertDialog(
                 onDismissRequest = { showDeleteDialog = false },
                 title = { Text("Eliminar Música") },
-                text = { Text("Tens a certeza que queres eliminar esta música? Esta ação não pode ser desfeita.") },
+                text = { Text("Tens a certeza que queres eliminar esta música?") },
                 confirmButton = {
                     Button(
                         colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFD32F2F)),
                         onClick = {
                             viewModel.deleteSong(
-                                playlistId,
-                                songId,
+                                songId = songId,
+                                playlistId = playlistId,
                                 onSuccess = { navController.popBackStack() },
-                                onFailure = { }
+                                onFailure = { errorMsg -> println("Erro ao eliminar música: $errorMsg") }
                             )
                             showDeleteDialog = false
                         }
-                    ) {
-                        Text("Eliminar", color = Color.White)
-                    }
+                    ) { Text("Eliminar", color = Color.White) }
                 },
                 dismissButton = {
-                    TextButton(onClick = { showDeleteDialog = false }) {
-                        Text("Cancelar")
-                    }
+                    TextButton(onClick = { showDeleteDialog = false }) { Text("Cancelar") }
                 }
             )
         }
@@ -190,16 +183,3 @@ fun SongDetailView(
         }
     }
 }
-
-@Preview(showBackground = true)
-@Composable
-fun SongDetailViewPreview() {
-    LoginAppTheme {
-        SongDetailView(
-            navController = rememberNavController(),
-            playlistId = "123",
-            songId = "456"
-        )
-    }
-}
-

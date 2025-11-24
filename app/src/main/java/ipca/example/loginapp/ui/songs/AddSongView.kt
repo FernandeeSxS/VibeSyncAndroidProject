@@ -8,24 +8,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 
 @Composable
 fun AddSongView(
     navController: NavController,
     playlistId: String,
-    viewModel: SongsViewModel = viewModel()
+    viewModel: SongsViewModel = hiltViewModel()
 ) {
     var title by remember { mutableStateOf(TextFieldValue("")) }
     var artist by remember { mutableStateOf(TextFieldValue("")) }
     var genre by remember { mutableStateOf(TextFieldValue("")) }
 
     val uiState by viewModel.uiState
-
-    LaunchedEffect(playlistId) {
-        viewModel.playlistId = playlistId
-    }
 
     Box(
         modifier = Modifier
@@ -75,6 +71,7 @@ fun AddSongView(
             Button(
                 onClick = {
                     viewModel.addSong(
+                        playlistId = playlistId,
                         title = title.text,
                         artist = artist.text,
                         genre = genre.text

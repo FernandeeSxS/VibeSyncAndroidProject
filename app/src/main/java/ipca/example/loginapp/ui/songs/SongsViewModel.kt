@@ -1,11 +1,16 @@
 package ipca.example.loginapp.ui.songs
 
-import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
-import com.google.firebase.Firebase
-import com.google.firebase.firestore.firestore
+import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import ipca.example.loginapp.models.Song
+import ipca.example.loginapp.repository.ResultWrapper
+import ipca.example.loginapp.repository.SongRepository
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 data class SongsViewState(
     var songs: List<Song> = emptyList(),
@@ -13,74 +18,51 @@ data class SongsViewState(
     var isLoading: Boolean = false
 )
 
-class SongsViewModel : ViewModel() {
+@HiltViewModel
+class SongsViewModel @Inject constructor(
+    private val repository: SongRepository
+) : ViewModel() {
 
     var uiState = mutableStateOf(SongsViewState())
         private set
 
     var playlistId: String? = null
 
-    private val db = Firebase.firestore
-
     fun fetchSongs(playlistId: String) {
-        uiState.value = uiState.value.copy(isLoading = true)
         this.playlistId = playlistId
+        uiState.value = uiState.value.copy(isLoading = true)
 
-        val docRef = db
-            .collection("playlists")
-            .document(playlistId)
-            .collection("songs")
-
-        docRef.addSnapshotListener { snapshot, e ->
-            if (e != null) {
-                Log.w("SongsViewModel", "Listen failed.", e)
-                uiState.value = uiState.value.copy(
-                    isLoading = false,
-                    error = e.localizedMessage
-                )
-                return@addSnapshotListener
+        repository.fetchSongs(playlistId).onEach { result ->
+            when (result) {
+                is ResultWrapper.Success -> {
+                    uiState.value = uiState.value.copy(
+                        songs = result.data ?: emptyList(),
+                        isLoading = false,
+                        error = null
+                    )
+                }
+                is ResultWrapper.Loading -> {
+                    uiState.value = uiState.value.copy(isLoading = true)
+                }
+                is ResultWrapper.Error -> {
+                    uiState.value = uiState.value.copy(
+                        isLoading = false,
+                        error = result.message
+                    )
+                }
             }
-
-            val songs = mutableListOf<Song>()
-            for (doc in snapshot?.documents ?: emptyList()) {
-                val song = doc.toObject(Song::class.java)
-                song?.docId = doc.id
-                song?.let { songs.add(it) }
-            }
-
-            uiState.value = uiState.value.copy(
-                songs = songs,
-                isLoading = false,
-                error = null
-            )
-        }
+        }.launchIn(viewModelScope)
     }
 
-    fun addSong(title: String, artist: String, genre: String) {
-        if (playlistId == null) return
-
+    fun addSong(playlistId: String, title: String, artist: String, genre: String) {
         uiState.value = uiState.value.copy(isLoading = true)
+        val song = Song(title = title, artist = artist, genre = genre)
 
-        val newSong = Song(
-            title = title,
-            artist = artist,
-            genre = genre
-        )
-
-        db.collection("playlists")
-            .document(playlistId!!)
-            .collection("songs")
-            .add(newSong)
-            .addOnSuccessListener { docRef ->
-                Log.d("SongsViewModel", "Song added with ID: ${docRef.id}")
-                uiState.value = uiState.value.copy(isLoading = false)
-            }
-            .addOnFailureListener { e ->
-                Log.w("SongsViewModel", "Error adding song", e)
-                uiState.value = uiState.value.copy(
-                    isLoading = false,
-                    error = e.localizedMessage
-                )
-            }
+        repository.saveSong(song, playlistId) { success ->
+            uiState.value = uiState.value.copy(
+                isLoading = false,
+                error = if (success) null else "Erro ao guardar música"
+            )
+        }
     }
 }

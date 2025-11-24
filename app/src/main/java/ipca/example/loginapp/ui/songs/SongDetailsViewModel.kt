@@ -1,11 +1,14 @@
 package ipca.example.loginapp.ui.songs
 
-import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
-import com.google.firebase.Firebase
-import com.google.firebase.firestore.firestore
+import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import ipca.example.loginapp.models.Song
+import ipca.example.loginapp.repository.ResultWrapper
+import ipca.example.loginapp.repository.SongRepository
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 data class SongDetailViewState(
     var title: String? = null,
@@ -15,12 +18,13 @@ data class SongDetailViewState(
     var isLoading: Boolean = false
 )
 
-class SongDetailViewModel : ViewModel() {
+@HiltViewModel
+class SongDetailViewModel @Inject constructor(
+    private val repository: SongRepository
+) : ViewModel() {
 
     var uiState = mutableStateOf(SongDetailViewState())
         private set
-
-    private val db = Firebase.firestore
 
     fun updateTitle(title: String) {
         uiState.value = uiState.value.copy(title = title)
@@ -34,84 +38,69 @@ class SongDetailViewModel : ViewModel() {
         uiState.value = uiState.value.copy(genre = genre)
     }
 
+    // -------------------------------------------
+    // FETCH SONG (SUSPEND)
+    // -------------------------------------------
     fun fetchSong(songId: String, playlistId: String) {
         uiState.value = uiState.value.copy(isLoading = true)
-        val docRef = db.collection("playlists")
-            .document(playlistId)
-            .collection("songs")
-            .document(songId)
-
-        docRef.get()
-            .addOnSuccessListener { doc ->
-                val song = doc.toObject(Song::class.java)
-                if (song != null) {
-                    uiState.value = uiState.value.copy(
-                        title = song.title,
-                        artist = song.artist,
-                        genre = song.genre,
-                        isLoading = false,
-                        error = null
-                    )
-                }
-            }
-            .addOnFailureListener { e ->
+        repository.getSong(playlistId, songId) { song ->
+            if (song != null) {
+                uiState.value = uiState.value.copy(
+                    title = song.title,
+                    artist = song.artist,
+                    genre = song.genre,
+                    isLoading = false,
+                    error = null
+                )
+            } else {
                 uiState.value = uiState.value.copy(
                     isLoading = false,
-                    error = e.localizedMessage
+                    error = "Música não encontrada"
                 )
             }
+        }
     }
 
-    fun saveSong(playlistId: String, songId: String? = null) {
+    // -------------------------------------------
+    // SAVE SONG (ADD OU UPDATE) - SUSPEND
+    // -------------------------------------------
+    fun saveSong(songId: String? = null, playlistId: String) {
         uiState.value = uiState.value.copy(isLoading = true)
 
         val song = Song(
+            docId = songId,
             title = uiState.value.title,
             artist = uiState.value.artist,
             genre = uiState.value.genre
         )
 
-        val collectionRef = db.collection("playlists")
-            .document(playlistId)
-            .collection("songs")
-
-        if (songId == null) {
-            collectionRef.add(song)
-                .addOnSuccessListener { docRef ->
-                    Log.d("SongDetailViewModel", "Song added with ID: ${docRef.id}")
-                    uiState.value = uiState.value.copy(isLoading = false)
-                }
-                .addOnFailureListener { e ->
-                    Log.w("SongDetailViewModel", "Error adding song", e)
-                    uiState.value = uiState.value.copy(isLoading = false, error = e.localizedMessage)
-                }
-        } else {
-            collectionRef.document(songId)
-                .set(song)
-                .addOnSuccessListener {
-                    Log.d("SongDetailViewModel", "Song updated with ID: $songId")
-                    uiState.value = uiState.value.copy(isLoading = false)
-                }
-                .addOnFailureListener { e ->
-                    Log.w("SongDetailViewModel", "Error updating song", e)
-                    uiState.value = uiState.value.copy(isLoading = false, error = e.localizedMessage)
-                }
+        repository.saveSong(song, playlistId) { success ->
+            uiState.value = uiState.value.copy(
+                isLoading = false,
+                error = if (success) null else "Erro ao guardar a música"
+            )
         }
     }
 
-    fun deleteSong(playlistId: String, songId: String, onSuccess: () -> Unit, onFailure: (String) -> Unit) {
-        db.collection("playlists")
-            .document(playlistId)
-            .collection("songs")
-            .document(songId)
-            .delete()
-            .addOnSuccessListener {
-                Log.d("SongDetailViewModel", "Song deleted with ID: $songId")
-                onSuccess()
+
+
+    // -------------------------------------------
+    // DELETE SONG
+    // -------------------------------------------
+    fun deleteSong(
+        songId: String,
+        playlistId: String,
+        onSuccess: () -> Unit,
+        onFailure: (String) -> Unit
+    ) {
+        viewModelScope.launch {
+            repository.deleteSong(playlistId, songId).collect { result ->
+                when(result) {
+                    is ResultWrapper.Success -> onSuccess()
+                    is ResultWrapper.Error -> onFailure(result.message ?: "Erro ao eliminar música")
+                    else -> {}
+                }
             }
-            .addOnFailureListener { e ->
-                Log.w("SongDetailViewModel", "Error deleting song", e)
-                onFailure(e.localizedMessage ?: "Erro ao eliminar música")
-            }
+        }
     }
 }

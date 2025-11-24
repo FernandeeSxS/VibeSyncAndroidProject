@@ -11,9 +11,9 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import ipca.example.loginapp.ui.theme.LoginAppTheme
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
+import dagger.hilt.android.AndroidEntryPoint
 import ipca.example.loginapp.ui.home.HomeView
 import ipca.example.loginapp.ui.login.UtilizadorLoginView
 import ipca.example.loginapp.ui.profile.UserProfileView
@@ -21,7 +21,10 @@ import ipca.example.loginapp.ui.register.RegisterView
 import ipca.example.loginapp.ui.songs.AddSongView
 import ipca.example.loginapp.ui.songs.SongDetailView
 import ipca.example.loginapp.ui.songs.SongsView
-import dagger.hilt.android.AndroidEntryPoint
+import ipca.example.loginapp.ui.theme.LoginAppTheme
+import androidx.compose.material3.Text
+import android.net.Uri
+
 
 const val TAG = "LoginApp"
 
@@ -60,45 +63,36 @@ class MainActivity : ComponentActivity() {
                             UserProfileView(navController = navController)
                         }
 
-                        // Rota para a Lista de Músicas (SongsView)
+                        // Songs List Screen
                         composable(
-
                             route = "songs/{playlistId}",
-
-
-                            arguments = listOf(
-                                navArgument("playlistId") {
-                                    type = NavType.StringType
-                                }
-                            )
+                            arguments = listOf(navArgument("playlistId") { type = NavType.StringType })
                         ) { backStackEntry ->
-
-
-                            val playlistId = backStackEntry.arguments?.getString("playlistId")
-
-                            playlistId?.let {
-                                SongsView(navController = navController, playlistId = it)
-                            }
+                            val playlistId = backStackEntry.arguments?.getString("playlistId") ?: ""
+                            SongsView(navController = navController, playlistId = playlistId)
                         }
 
-                        composable("add_song/{playlistId}") { backStackEntry ->
-                            val playlistId = backStackEntry.arguments?.getString("playlistId")!!
-                            AddSongView(
-                                navController = navController,
-                                playlistId = playlistId
-                            )
+                        // Add Song Screen
+                        composable(
+                            route = "add_song/{playlistId}",
+                            arguments = listOf(navArgument("playlistId") { type = NavType.StringType })
+                        ) { backStackEntry ->
+                            val playlistId = backStackEntry.arguments?.getString("playlistId") ?: ""
+                            AddSongView(navController = navController, playlistId = playlistId)
                         }
 
                         composable("song_detail/{songId}/{playlistId}") { backStackEntry ->
-                            val songId = backStackEntry.arguments?.getString("songId")!!
-                            val playlistId = backStackEntry.arguments?.getString("playlistId")!!
-                            SongDetailView(
-                                navController = navController,
-                                songId = songId,
-                                playlistId = playlistId
-                            )
-                        }
+                            val songId = backStackEntry.arguments?.getString("songId")?.let { Uri.decode(it) }
+                            val playlistId = backStackEntry.arguments?.getString("playlistId")?.let { Uri.decode(it) }
 
+                            if (!songId.isNullOrEmpty() && !playlistId.isNullOrEmpty()) {
+                                SongDetailView(
+                                    navController = navController,
+                                    songId = songId,
+                                    playlistId = playlistId
+                                )
+                            }
+                        }
                     }
                 }
             }
