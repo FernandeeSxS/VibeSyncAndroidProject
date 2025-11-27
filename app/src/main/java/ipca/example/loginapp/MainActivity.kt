@@ -22,7 +22,6 @@ import ipca.example.loginapp.ui.songs.AddSongView
 import ipca.example.loginapp.ui.songs.SongDetailView
 import ipca.example.loginapp.ui.songs.SongsView
 import ipca.example.loginapp.ui.theme.LoginAppTheme
-import androidx.compose.material3.Text
 import android.net.Uri
 
 

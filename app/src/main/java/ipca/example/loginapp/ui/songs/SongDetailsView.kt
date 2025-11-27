@@ -17,7 +17,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 
 @Composable
@@ -34,7 +33,6 @@ fun SongDetailView(
     var newValue by remember { mutableStateOf("") }
     var showDeleteDialog by remember { mutableStateOf(false) }
 
-    // FETCH SONG
     LaunchedEffect(songId, playlistId) {
         if (songId.isNotEmpty() && playlistId.isNotEmpty()) {
             viewModel.fetchSong(songId, playlistId)
@@ -122,7 +120,6 @@ fun SongDetailView(
             }
         }
 
-        // EDIT POPUP
         if (showEditDialog) {
             AlertDialog(
                 onDismissRequest = { showEditDialog = false },
@@ -152,7 +149,6 @@ fun SongDetailView(
             )
         }
 
-        // DELETE POPUP
         if (showDeleteDialog) {
             AlertDialog(
                 onDismissRequest = { showDeleteDialog = false },

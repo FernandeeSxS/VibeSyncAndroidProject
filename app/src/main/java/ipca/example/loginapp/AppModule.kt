@@ -1,6 +1,5 @@
 package ipca.example.loginapp
 
-import androidx.compose.ui.tooling.preview.Preview
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth

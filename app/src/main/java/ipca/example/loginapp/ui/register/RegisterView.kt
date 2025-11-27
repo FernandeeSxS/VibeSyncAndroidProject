@@ -41,7 +41,6 @@ fun RegisterView(
                 .fillMaxWidth()
                 .padding(top = 64.dp)
         ) {
-            // Ícone da app
             Icon(
                 imageVector = Icons.Default.MusicNote,
                 contentDescription = "VibeSync Icon",
@@ -51,7 +50,6 @@ fun RegisterView(
                     .padding(bottom = 8.dp)
             )
 
-            // Nome da app
             Text(
                 text = "VibeSync",
                 style = MaterialTheme.typography.headlineLarge,
@@ -60,7 +58,6 @@ fun RegisterView(
                 textAlign = TextAlign.Center
             )
 
-            // Frase inspiradora
             Text(
                 text = "Cria a tua conta e sincroniza o teu ritmo!",
                 style = MaterialTheme.typography.bodyMedium.copy(
@@ -73,7 +70,6 @@ fun RegisterView(
 
             Spacer(modifier = Modifier.height(48.dp))
 
-            // Título "Registo"
             Text(
                 text = "Registo",
                 style = MaterialTheme.typography.headlineSmall.copy(
@@ -84,7 +80,6 @@ fun RegisterView(
                 modifier = Modifier.padding(bottom = 16.dp)
             )
 
-            // Campo Email
             TextField(
                 value = viewModel.email,
                 onValueChange = { viewModel.email = it },
@@ -96,7 +91,6 @@ fun RegisterView(
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            // Campo Password
             TextField(
                 value = viewModel.password,
                 onValueChange = { viewModel.password = it },
@@ -115,7 +109,6 @@ fun RegisterView(
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            // Campo Confirmar Password
             TextField(
                 value = viewModel.confirmPassword,
                 onValueChange = { viewModel.confirmPassword = it },
@@ -143,7 +136,6 @@ fun RegisterView(
                 )
             }
 
-            // Botão de registo
             Button(
                 onClick = {
                     viewModel.registerUser {
@@ -171,7 +163,6 @@ fun RegisterView(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Link para login
             TextButton(
                 onClick = { navController.navigate("login") }
             ) {

@@ -4,7 +4,6 @@ import com.google.firebase.firestore.FirebaseFirestore
 import ipca.example.loginapp.models.Song
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.tasks.await
@@ -14,7 +13,6 @@ class SongRepository @Inject constructor(
     private val db: FirebaseFirestore
 ) {
 
-    // FETCH ALL SONGS
     fun fetchSongs(playlistId: String): Flow<ResultWrapper<List<Song>>> = flow {
         try {
             emit(ResultWrapper.Loading())
@@ -40,7 +38,6 @@ class SongRepository @Inject constructor(
     }.flowOn(Dispatchers.IO)
 
 
-    // FETCH SINGLE SONG (precisa de playlistId)
     fun getSong(playlistId: String, songId: String, onResult: (Song?) -> Unit) {
         db.collection("playlists")
             .document(playlistId)
@@ -57,8 +54,6 @@ class SongRepository @Inject constructor(
     }
 
 
-    // ADD SONG (novo documento) COM playlistId
-// ----------------------------------------------------
     fun addSong(playlistId: String, song: Song, onResult: (Boolean) -> Unit) {
         db.collection("playlists")
             .document(playlistId)
@@ -68,9 +63,6 @@ class SongRepository @Inject constructor(
             .addOnFailureListener { onResult(false) }
     }
 
-    // ----------------------------------------------------
-// UPDATE SONG (documento existente) COM playlistId
-// ----------------------------------------------------
     fun updateSong(playlistId: String, song: Song, onResult: (Boolean) -> Unit) {
         if (song.docId == null) {
             onResult(false)
@@ -85,9 +77,6 @@ class SongRepository @Inject constructor(
             .addOnFailureListener { onResult(false) }
     }
 
-    // ----------------------------------------------------
-// SAVE SONG (ADD OU UPDATE)
-// ----------------------------------------------------
     fun saveSong(song: Song, playlistId: String, onResult: (Boolean) -> Unit) {
         if (song.docId == null) {
             addSong(playlistId, song, onResult)
@@ -97,9 +86,6 @@ class SongRepository @Inject constructor(
     }
 
 
-    // ----------------------------------------------------
-    // DELETE SONG
-    // ----------------------------------------------------
     fun deleteSong(playlistId: String, songId: String): Flow<ResultWrapper<Unit>> = flow {
         try {
             emit(ResultWrapper.Loading())

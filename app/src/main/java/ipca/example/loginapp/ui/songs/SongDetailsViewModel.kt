@@ -38,9 +38,6 @@ class SongDetailViewModel @Inject constructor(
         uiState.value = uiState.value.copy(genre = genre)
     }
 
-    // -------------------------------------------
-    // FETCH SONG (SUSPEND)
-    // -------------------------------------------
     fun fetchSong(songId: String, playlistId: String) {
         uiState.value = uiState.value.copy(isLoading = true)
         repository.getSong(playlistId, songId) { song ->
@@ -61,9 +58,6 @@ class SongDetailViewModel @Inject constructor(
         }
     }
 
-    // -------------------------------------------
-    // SAVE SONG (ADD OU UPDATE) - SUSPEND
-    // -------------------------------------------
     fun saveSong(songId: String? = null, playlistId: String) {
         uiState.value = uiState.value.copy(isLoading = true)
 
@@ -82,11 +76,6 @@ class SongDetailViewModel @Inject constructor(
         }
     }
 
-
-
-    // -------------------------------------------
-    // DELETE SONG
-    // -------------------------------------------
     fun deleteSong(
         songId: String,
         playlistId: String,
